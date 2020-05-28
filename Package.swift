@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "BioSwift",
+    name: "Bio",
     platforms: [
         .macOS(.v10_13),
     ],
@@ -31,15 +31,15 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
-            name: "BioSwift",
+            name: "Bio",
             dependencies: ["ArgumentParser", "Logging","Just", "Path",
                            /*"CSV",*/
                            /*.product(name: "Numerics", package: "swift-numerics"),*/]),
         .target(
             name: "Run",
-            dependencies: ["BioSwift"]),
+            dependencies: ["Bio"]),
         .testTarget(
             name: "BioSwiftTests",
-            dependencies: ["BioSwift"]),
+            dependencies: ["Bio"]),
     ]
 )

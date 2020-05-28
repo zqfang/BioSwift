@@ -1,7 +1,7 @@
 import Foundation
 //import Numerics
 import ArgumentParser
-import BioSwift
+import Bio
 
 // command-line
 struct biosw: ParsableCommand {
@@ -11,6 +11,7 @@ struct biosw: ParsableCommand {
 
     init() {}
 }
+
 // subcommands
 struct gtf2bed: ParsableCommand {
 
@@ -32,12 +33,12 @@ struct gtf2bed: ParsableCommand {
     func run() throws {
         
         if verbose {
-            BSLogger.logLevel = .debug
+            Bio.BSLogger.logLevel = .debug
         }
-        BSLogger.debug("Program start")
+        Bio.BSLogger.debug("Program start")
         let gtf_parser = GTF(from: gtf, to: bed)
         gtf_parser.toBed()
-        BSLogger.debug("Program end")
+        Bio.BSLogger.debug("Program end")
     }
 }
 
