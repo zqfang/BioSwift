@@ -1,47 +1,35 @@
 import XCTest
 import class Foundation.Bundle
+import Bio
+
 
 final class BioSwiftTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-
-        // Some of the APIs that we use below are available in macOS 10.13 and above.
+    func testArr2D() throws {
         guard #available(macOS 10.13, *) else {
             return
         }
-
-        let fooBinary = productsDirectory.appendingPathComponent("BioSwift")
-
-        let process = Process()
-        process.executableURL = fooBinary
-
-        let pipe = Pipe()
-        process.standardOutput = pipe
-
-        try process.run()
-        process.waitUntilExit()
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)
-
-        XCTAssertEqual(output, "Hello, world!\n")
-    }
-
-    /// Returns path to the built products directory.
-    var productsDirectory: URL {
-      #if os(macOS)
-        for bundle in Bundle.allBundles where bundle.bundlePath.hasSuffix(".xctest") {
-            return bundle.bundleURL.deletingLastPathComponent()
+        var arr = Array2D<Int>(rows:10, columns:5, initialValue: 0 )
+        arr[1,4] = 1
+        arr[5,2] = 6
+        for i in 0..<5 {
+            print(arr[1,i])
         }
-        fatalError("couldn't find the products directory")
-      #else
-        return Bundle.main.bundleURL
-      #endif
+        print()
+        XCTAssertEqual(arr[1,4], 1)
+        XCTAssertEqual(arr[5,2], 6)
+     
     }
-
+    
     static var allTests = [
-        ("testExample", testExample),
+        ("Array2DTest", testArr2D),
     ]
+    
 }
+
+
+// init
+// var cookies = Array2D(columns: 9, rows: 7, initialValue: 0)
+// slicing
+// let myCookie = cookies[column, row]
+// set value
+// cookies[column, row] = newCookie

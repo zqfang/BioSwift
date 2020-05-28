@@ -14,7 +14,7 @@ biosw gtf2bed gencode.gtf out.bed
 ## Installation
 ### Build
 ```shell
-cd BioSwift
+cd swift-bio
 swift build
 # build output in .build/debug
 
