@@ -8,7 +8,7 @@ Each handy tool is a subcommand of bioswift.
 ## Usage:
 1. Convert GTF to BED format
 ```shell
-bioswift gtf2bed gencode.gtf out.bed
+biosw gtf2bed gencode.gtf out.bed
 ```
 
 ## Dev

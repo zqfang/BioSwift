@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "BioSwift",
     products: [
-        .executable(name: "bioswift", targets: ["BioSwift"])
+        .executable(name: "biosw", targets: ["BioSwift"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
