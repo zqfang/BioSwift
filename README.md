@@ -19,7 +19,7 @@ swift build
 # build output in .build/debug
 
 # test if build successfully
-swift run bioswift
+swift run biosw
 ```
 ### Build Release version
 ```shell
