@@ -7,17 +7,20 @@
 
 import Foundation
 
-class GTF {
-    let input: String
+public class GTF {
+    let input: URL
     let output: URL
+    private var _outlines = [String]()
     // gtf path and bed path
     init(from gtf:String, to bed: String) {
-        self.input = gtf
+        self.input = URL(fileURLWithPath: gtf)
         self.output = URL(fileURLWithPath: bed)
     }
-    func run() {
-        var _outlines = [String]() // initialize empty
-        if let file = File(self.input){
+    
+    func toBed() {
+        //var _outlines = [String]() // initialize empty
+        logger.debug("Read gtf line by line")
+        if let file = File(self.input.path){
             while let line = file.getLine() {
                 if line.starts(with: "#") {
                     continue
@@ -41,10 +44,10 @@ class GTF {
                   }
           }
         }
-        write(_outlines)
+        write()
     }
     
-    func getAttribute(_ line: String) -> [String:String]{
+    private func getAttribute(_ line: String) -> [String:String]{
         var dict =  [String:String]()
         let attr = line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).split(separator: ";")
         for item in attr {
@@ -57,24 +60,25 @@ class GTF {
     /**
      * Converts tuples to dict
      */
-    func dict<K,V>(_ tuples:[(K,V)])->[K:V]{
+    func tuple2dict<K,V>(_ tuples:[(K,V)])->[K:V]{
         var dict:[K:V] = [K:V]()
         tuples.forEach {dict[$0.0] = $0.1}
         return dict
     }
     // read whole file
-    func read(_ url: URL) -> [String]{
-        var _outlines = [String]() // initialize empty
-        try? String(contentsOf: url, encoding: .utf8)
+    func read() {
+        logger.debug("Read gtf one time")
+        try? String(contentsOf: self.input,
+                    encoding: .utf8)
             .split(separator: "\n")
             .forEach { line in
-                _outlines.append(String(line))}
-        
-        return _outlines
+                self._outlines.append(String(line))}
     }
-    func write(_ lines:[String]){
+    // whole whole array
+    func write(){
+        logger.debug("Write bed")
         do {
-            let outline = lines.joined(separator: "\n")
+            let outline = self._outlines.joined(separator: "\n")
             try outline.write(to: self.output, atomically: false, encoding: .utf8)
         } catch{}
     }

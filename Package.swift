@@ -16,7 +16,7 @@ let package = Package(
         // logging
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         // csv reader
-        .package(url: "https://github.com/yaslab/CSV.swift", from: "2.4.0"),
+        //.package(url: "https://github.com/yaslab/CSV.swift", from: "2.4.0"),
         // Swift version of python-requests
         .package(url: "https://github.com/saeta/Just", from: "0.7.3"),
         // Path
@@ -29,7 +29,8 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "BioSwift",
-            dependencies: ["ArgumentParser", "Logging","Just", "Path", "CSV",
+            dependencies: ["ArgumentParser", "Logging","Just", "Path",
+                           /*"CSV",*/
                            /*.product(name: "Numerics", package: "swift-numerics"),*/]),
         .testTarget(
             name: "BioSwiftTests",

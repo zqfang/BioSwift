@@ -6,7 +6,7 @@ import Logging
 
 // create a logger
 LoggingSystem.bootstrap(StreamLogHandler.standardError)
-let logger = Logger(label: "BioSwift.BestExampleApp.main")
+var logger = Logger(label: "BioSwift.main")
 
 // command-line
 struct BioSwift: ParsableCommand {
@@ -35,17 +35,16 @@ struct gtf2bed: ParsableCommand {
     private var bed: String
     
     func run() throws {
-        logger.debug("Program start")
+        
         if verbose {
-            
-            print("this is a test")
-
+            logger.logLevel = .debug
         }
-        let parser = GTF(from: gtf, to: bed)
-        parser.run()
+        logger.debug("Program start")
+        let gtf_parser = GTF(from: gtf, to: bed)
+        gtf_parser.toBed()
         logger.debug("Program end")
     }
 }
 
-
+// need to be set, then it works on command-line
 BioSwift.main()
