@@ -10,16 +10,17 @@ import Foundation
 public class GTF {
     let input: URL
     let output: URL
-    private var _outlines = [String]()
+    var _outlines: Array<String>
     // gtf path and bed path
-    init(from gtf:String, to bed: String) {
+    public init(from gtf:String, to bed: String) {
         self.input = URL(fileURLWithPath: gtf)
         self.output = URL(fileURLWithPath: bed)
+        self._outlines = [String]()
     }
     
-    func toBed() {
+    public func toBed() {
         //var _outlines = [String]() // initialize empty
-        logger.debug("Read gtf line by line")
+        BSLogger.debug("Read gtf line by line")
         if let file = File(self.input.path){
             while let line = file.getLine() {
                 if line.starts(with: "#") {
@@ -31,13 +32,8 @@ public class GTF {
                     let attr = self.getAttribute(String(last))
                     var outline:String = "\(attr["gene_id"]!)\t\(attr["gene_name"]!)\t\(arr[6])"
                     var chrStart = Int(arr[3])!
-                    var chrEnd = Int(arr[4])!
-                    if arr[6] == "+"{
-                        chrStart -= 1
-                    }
-                    else if arr[6] == "-" {
-                        chrEnd += 1
-                    } else {}
+                    let chrEnd = Int(arr[4])!
+                    chrStart -= 1
                     outline = "\(arr[0])\t\(chrStart)\t\(chrEnd)\t" + outline
                     _outlines.append(outline)
                     //print(outline)
@@ -60,14 +56,14 @@ public class GTF {
     /**
      * Converts tuples to dict
      */
-    func tuple2dict<K,V>(_ tuples:[(K,V)])->[K:V]{
+    public func tuple2dict<K,V>(_ tuples:[(K,V)])->[K:V]{
         var dict:[K:V] = [K:V]()
         tuples.forEach {dict[$0.0] = $0.1}
         return dict
     }
     // read whole file
-    func read() {
-        logger.debug("Read gtf one time")
+    public func read() {
+        BSLogger.debug("Read gtf one time")
         try? String(contentsOf: self.input,
                     encoding: .utf8)
             .split(separator: "\n")
@@ -75,8 +71,8 @@ public class GTF {
                 self._outlines.append(String(line))}
     }
     // whole whole array
-    func write(){
-        logger.debug("Write bed")
+    public func write(){
+        BSLogger.debug("Write bed")
         do {
             let outline = self._outlines.joined(separator: "\n")
             try outline.write(to: self.output, atomically: false, encoding: .utf8)

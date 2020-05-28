@@ -1,17 +1,12 @@
 import Foundation
 //import Numerics
 import ArgumentParser
-import Logging
-
-
-// create a logger
-LoggingSystem.bootstrap(StreamLogHandler.standardError)
-var logger = Logger(label: "BioSwift.main")
+import BioSwift
 
 // command-line
-struct BioSwift: ParsableCommand {
+struct biosw: ParsableCommand {
     static let configuration = CommandConfiguration(
-        abstract: "A Collection of Swift Ccommand-line Tool for Bioinformatics",
+        abstract: "A Collection of Swift Command-line Tool for Bioinformatics",
         subcommands: [gtf2bed.self])
 
     init() {}
@@ -37,14 +32,14 @@ struct gtf2bed: ParsableCommand {
     func run() throws {
         
         if verbose {
-            logger.logLevel = .debug
+            BSLogger.logLevel = .debug
         }
-        logger.debug("Program start")
+        BSLogger.debug("Program start")
         let gtf_parser = GTF(from: gtf, to: bed)
         gtf_parser.toBed()
-        logger.debug("Program end")
+        BSLogger.debug("Program end")
     }
 }
 
 // need to be set, then it works on command-line
-BioSwift.main()
+biosw.main()

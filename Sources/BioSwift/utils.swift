@@ -5,6 +5,11 @@
 //  Created by Zhuoqing Fang on 5/27/20.
 //
 import Foundation
+import Logging
+
+// define a global logger
+public var BSLogger = Logger(label: "BioSwift.main",
+                              factory: StreamLogHandler.standardError)
 
 // read file line by line
 class File {

@@ -5,8 +5,11 @@ import PackageDescription
 
 let package = Package(
     name: "BioSwift",
+    platforms: [
+        .macOS(.v10_13),
+    ],
     products: [
-        .executable(name: "biosw", targets: ["BioSwift"])
+        .executable(name: "biosw", targets: ["Run"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -32,6 +35,9 @@ let package = Package(
             dependencies: ["ArgumentParser", "Logging","Just", "Path",
                            /*"CSV",*/
                            /*.product(name: "Numerics", package: "swift-numerics"),*/]),
+        .target(
+            name: "Run",
+            dependencies: ["BioSwift"]),
         .testTarget(
             name: "BioSwiftTests",
             dependencies: ["BioSwift"]),
