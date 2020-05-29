@@ -13,12 +13,17 @@ final class BioSwiftTests: XCTestCase {
         arr[5,2] = 6
         print("Print row 5:")
         print(arr[5])
+        print(arr[[1,3],nil])
+        print(arr[2,nil])
+        print(arr[1..<6, 3..<5])
         XCTAssertEqual(arr[1,4], 1)
         XCTAssertEqual(arr[5,2], 6)
-     
+        
+        let arr2 = Array2D<Int>(arr)
+        XCTAssertEqual(arr2[5,2], 6)
     }
     func testGTF() throws {
-        let testDataPath = PACKAGE_ROOT + "/data"
+        let testDataPath = PACKAGE_ROOT.path + "/data"
         let gtf = GTF(from: testDataPath+"/test.gtf",
                       to: testDataPath+"/test.bed")
         gtf.toBed()
@@ -32,10 +37,14 @@ final class BioSwiftTests: XCTestCase {
         guard #available(macOS 10.13, *) else {
             return
         }
-
-        let fooBinary = productsDirectory.appendingPathComponent("biosw")
+        let aaa = FileManager.default.currentDirectoryPath // -> /private/tmp
+        //let aaa = FileManager.default.homeDirectoryForCurrentUser
+        print("FileManger default directory: ", aaa)
+        
+        // test binary
+        let bsBinary = productsDirectory.appendingPathComponent("biosw")
         let process = Process()
-        process.executableURL = fooBinary
+        process.executableURL = bsBinary
 
         let pipe = Pipe()
         process.standardOutput = pipe
@@ -45,10 +54,8 @@ final class BioSwiftTests: XCTestCase {
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)
-        print(output!)
-        //XCTAssertEqual(output, "Hello, world!\n")
+        XCTAssertNotNil(output)
     }
-
     /// Returns path to the built products directory.
     var productsDirectory: URL {
       #if os(macOS)
@@ -60,7 +67,9 @@ final class BioSwiftTests: XCTestCase {
         return Bundle.main.bundleURL
       #endif
     }
-    fileprivate let PACKAGE_ROOT = URL(fileURLWithPath: #file.replacingOccurrences(of: "Tests/BioSwiftTests/BioSwiftTests.swift", with: "")).path
+    fileprivate var PACKAGE_ROOT: URL {
+        return URL(fileURLWithPath: #file.replacingOccurrences(of: "Tests/BioSwiftTests/BioSwiftTests.swift", with: ""))
+    }
         
     static var allTests = [
         ("Array2DTest", testArr2D),

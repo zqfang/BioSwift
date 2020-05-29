@@ -4,12 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "Bio",
+    name: "swift-bio",
     platforms: [
         .macOS(.v10_13),
     ],
     products: [
-        .executable(name: "biosw", targets: ["Run"])
+        .executable(name: "biosw", targets: ["Run"]),
+        .library(name: "Bio", targets: ["Bio"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -21,9 +22,9 @@ let package = Package(
         // csv reader
         //.package(url: "https://github.com/yaslab/CSV.swift", from: "2.4.0"),
         // Swift version of python-requests
-        .package(url: "https://github.com/saeta/Just", from: "0.7.3"),
+        //.package(url: "https://github.com/saeta/Just", from: "0.7.3"),
         // Path
-        .package(url: "https://github.com/mxcl/Path.swift", from: "0.16.3"),
+        //.package(url: "https://github.com/mxcl/Path.swift", from: "0.16.3"),
         // logging
         
     ],
@@ -32,12 +33,12 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Bio",
-            dependencies: ["ArgumentParser", "Logging","Just", "Path",
-                           /*"CSV",*/
+            dependencies: ["Logging",
+                           /*"CSV","Just", "Path",*/
                            /*.product(name: "Numerics", package: "swift-numerics"),*/]),
         .target(
             name: "Run",
-            dependencies: ["Bio"]),
+            dependencies: ["Bio", "ArgumentParser"]),
         .testTarget(
             name: "BioSwiftTests",
             dependencies: ["Bio"]),

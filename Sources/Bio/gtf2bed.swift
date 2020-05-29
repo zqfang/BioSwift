@@ -20,15 +20,19 @@ public class GTF {
     //deinit{} // no () here
     
     public func toBed() {
-//        if let file = File(self.input.path){
-//            while let line = file.getLine() {
-//                self._parse(line)
-//          }
-//        }
-        read()
+        if FileManager.default.fileExists(atPath: self.input.path)
+        {
+            BSLogger.debug("Found \(self.input.path)")
+        }
+        if let s = StreamReader(url: self.input){
+        BSLogger.debug("Read gtf")
+        while let line = s.nextLine() {
+                self._parse(line)
+            }
+        }
+        // read()
         write()
     }
-    
     private func _getAttribute(_ line: String) -> [String:String]{
         var dict = [String:String]()
         let attr = line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).split(separator: ";")
@@ -48,14 +52,19 @@ public class GTF {
         if arr[2] == "gene" {
             let last = arr.last! // last element
             let attr = self._getAttribute(String(last))
-            var outline:String = "\(attr["gene_id"]!)\t\(attr["gene_name"]!)\t\(arr[6])"
-            var chrStart = Int(arr[3])!
-            let chrEnd = Int(arr[4])!
-            chrStart -= 1
-            outline = "\(arr[0])\t\(chrStart)\t\(chrEnd)\t" + outline
-            _outlines.append(outline)
-            //print(outline)
-          }
+            // makesure gene_id exists
+            if let gid = attr["gene_id"] {
+                var outline:String = "\(gid)\t\(attr["gene_name"]!)\t\(arr[6])"
+                var chrStart = Int(arr[3])!
+                let chrEnd = Int(arr[4])!
+                chrStart -= 1
+                outline = "\(arr[0])\t\(chrStart)\t\(chrEnd)\t" + outline
+                _outlines.append(outline)
+
+            } else {
+                return
+            }
+        }
     }
     /**
      * Converts tuples to dict
@@ -65,16 +74,18 @@ public class GTF {
         tuples.forEach {dict[$0.0] = $0.1}
         return dict
     }
-    // read whole file
+    /**
+     * Read whole file one time.
+     * WARNING: This method is too slow when file size is large. Don't use
+     */
     public func read() {
         BSLogger.debug("Read gtf")
         try? String(contentsOf: self.input,
                     encoding: .utf8)
             .split(separator: "\n") // "\n"
             .forEach { line in self._parse(String(line))}
-
     }
-    // whole whole array
+    // write file
     public func write(){
         BSLogger.debug("Write bed")
         do {

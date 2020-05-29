@@ -4,67 +4,12 @@
 //
 //  Created by Zhuoqing Fang on 5/27/20.
 //
-#if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
-    import Darwin
-#else
-    import Glibc
-#endif
-
 import Foundation
 import Logging
 
 // define a global logger
 public var BSLogger = Logger(label: "BioSwift.main",
                               factory: StreamLogHandler.standardError)
-
-// read file line by line
-class File {
-    init? (_ path: String) {
-        errno = 0
-        file = fopen(path, "r")
-        if file == nil {
-            perror(nil)
-            return nil
-        }
-    }
-    
-    deinit {
-        fclose(file)
-    }
-
-    func testIndex(line: String) -> Bool {
-        guard line.lastIndex(of: "\r") == nil else {
-            return false
-        }
-        guard line.lastIndex(of: "\n") == nil else {
-            return false
-        }
-        guard line.lastIndex(of: "\r\n") == nil else {
-            return false
-        }
-        return true
-    }
-
-    func getLine() -> String? {
-        var line = ""
-        repeat {
-            var buf = [CChar](repeating: 0, count: 1024)
-            errno = 0
-            if fgets(&buf, Int32(buf.count), file) == nil {
-                if feof(file) != 0 {
-                    return nil
-                } else {
-                    perror(nil)
-                    return nil
-                }
-            }
-            line += String(cString: buf)
-//        } while (line.lastIndex(of: "\r") == nil)
-        } while testIndex(line: line)
-        return line
-    }
-    private var file: UnsafeMutablePointer<FILE>? = nil
-}
 
 //let str:String? = "Not Found"
 //let str2:String? = nil
@@ -73,6 +18,54 @@ class File {
 //} else {
 //    print("failed")
 //}
+//
 
-
-
+// Swifty FileReader, read file line by line
+class StreamReader {
+    let encoding: String.Encoding
+    let chunkSize: Int
+    let fileHandle: FileHandle
+    var buffer: Data
+    let delimPattern : Data
+    var isAtEOF: Bool = false
+    
+    init?(url: URL, delimeter: String = "\n", encoding: String.Encoding = .utf8, chunkSize: Int = 4096)
+    {
+        guard let fileHandle = try? FileHandle(forReadingFrom: url) else { return nil }
+        self.fileHandle = fileHandle
+        self.chunkSize = chunkSize
+        self.encoding = encoding
+        buffer = Data(capacity: chunkSize)
+        delimPattern = delimeter.data(using: .utf8)!
+    }
+    
+    deinit {
+        fileHandle.closeFile()
+    }
+    
+    func rewind() {
+        fileHandle.seek(toFileOffset: 0)
+        buffer.removeAll(keepingCapacity: true)
+        isAtEOF = false
+    }
+    
+    func nextLine() -> String? {
+        if isAtEOF { return nil }
+        
+        repeat {
+            if let range = buffer.range(of: delimPattern, options: [], in: buffer.startIndex..<buffer.endIndex) {
+                let subData = buffer.subdata(in: buffer.startIndex..<range.lowerBound)
+                let line = String(data: subData, encoding: encoding)
+                buffer.replaceSubrange(buffer.startIndex..<range.upperBound, with: [])
+                return line
+            } else {
+                let tempData = fileHandle.readData(ofLength: chunkSize)
+                if tempData.count == 0 {
+                    isAtEOF = true
+                    return (buffer.count > 0) ? String(data: buffer, encoding: encoding) : nil
+                }
+                buffer.append(tempData)
+            }
+        } while true
+    }
+}
