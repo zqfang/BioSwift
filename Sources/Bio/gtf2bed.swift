@@ -7,10 +7,12 @@
 
 import Foundation
 
+
 public class GTF {
     let input: URL
     let output: URL
-    var _outlines: Array<String>
+    var base: Int = 1
+    fileprivate var _outlines: Array<String>
     // gtf path and bed path
     public init(from gtf:String, to bed: String) {
         self.input = URL(fileURLWithPath: gtf)
@@ -19,10 +21,13 @@ public class GTF {
     }
     //deinit{} // no () here
     
-    public func toBed() {
+    public func toBed(coordinateBase0: Bool = true) {
         if FileManager.default.fileExists(atPath: self.input.path)
         {
             BSLogger.debug("Found \(self.input.path)")
+        }
+        if !coordinateBase0 {
+            base = 0
         }
         if let s = StreamReader(url: self.input){
         BSLogger.debug("Read gtf")
@@ -57,7 +62,7 @@ public class GTF {
                 var outline:String = "\(gid)\t\(attr["gene_name"]!)\t\(arr[6])"
                 var chrStart = Int(arr[3])!
                 let chrEnd = Int(arr[4])!
-                chrStart -= 1
+                chrStart -= base
                 outline = "\(arr[0])\t\(chrStart)\t\(chrEnd)\t" + outline
                 _outlines.append(outline)
 
