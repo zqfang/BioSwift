@@ -36,9 +36,9 @@ struct gtf2bed: ParsableCommand {
             Bio.BSLogger.logLevel = .debug
         }
         Bio.BSLogger.debug("Program start")
-        let gtf_parser = GTF(from: gtf, to: bed)
+        let gtf_parser = GTF(gtf)
         let base0 = base1 ? false : true
-        gtf_parser.toBed(coordinateBase0: base0)
+        gtf_parser.toBed(filename: bed, coordinateBase0: base0)
         Bio.BSLogger.debug("Program end")
     }
 }

@@ -4,13 +4,20 @@ A collection of toy `command-line` tools written in `Swift` for bioinformatic da
 Each tool is a subcommand of `biosw`. 
 
 ## Usage:
+Command line
 1. Convert GTF to BED format
 ```shell
 biosw gtf2bed gencode.gtf out.bed
 ```
 2. More will be added if worth to.
 
-
+Swift REPL
+```swift
+import Bio
+let testDataPath = "data"
+let gtf = GTF(testDataPath+"/test.gtf")
+gtf.toBed(filename: testDataPath+"/test.bed")
+```
 ## Installation
 ### Build
 ```shell
@@ -69,7 +76,6 @@ print(arr[1..<6, 3..<5]) // [[0, 1], [0, 0], [0, 0], [0, 0], [0, 0]]
 
 // init 2d array
 let arr2 = Array2D<Int>(arr)
-XCTAssertEqual(arr2[5,2], 6)
 ```
 
 

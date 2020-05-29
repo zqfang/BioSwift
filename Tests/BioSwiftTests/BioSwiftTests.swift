@@ -24,9 +24,12 @@ final class BioSwiftTests: XCTestCase {
     }
     func testGTF() throws {
         let testDataPath = PACKAGE_ROOT.path + "/data"
-        let gtf = GTF(from: testDataPath+"/test.gtf",
-                      to: testDataPath+"/test.bed")
-        gtf.toBed()
+        let gtf = GTF(testDataPath+"/test.gtf")
+        gtf.toBed(filename: testDataPath+"/test.bed")
+        print(testDataPath+"/test.bed")
+        let output = URL(fileURLWithPath: testDataPath+"/test.bed")
+        XCTAssertEqual(output.deletingLastPathComponent().path, testDataPath)
+        
     }
     func testBioSwift() throws {
         // This is an example of a functional test case.
@@ -40,7 +43,6 @@ final class BioSwiftTests: XCTestCase {
         let aaa = FileManager.default.currentDirectoryPath // -> /private/tmp
         //let aaa = FileManager.default.homeDirectoryForCurrentUser
         print("FileManger default directory: ", aaa)
-        
         // test binary
         let bsBinary = productsDirectory.appendingPathComponent("biosw")
         let process = Process()

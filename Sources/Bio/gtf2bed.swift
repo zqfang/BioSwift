@@ -10,25 +10,31 @@ import Foundation
 
 public class GTF {
     let input: URL
-    let output: URL
     var base: Int = 1
     fileprivate var _outlines: Array<String>
     // gtf path and bed path
-    public init(from gtf:String, to bed: String) {
+    public init(_ gtf:String) {
         self.input = URL(fileURLWithPath: gtf)
-        self.output = URL(fileURLWithPath: bed)
         self._outlines = [String]()
+        if FileManager.default.isReadableFile(atPath: self.input.path)
+        {
+            BSLogger.debug("Found \(self.input.path)")
+        } else {
+            assertionFailure("File Not Found at \(self.input.path)")
+        }
     }
     //deinit{} // no () here
     
-    public func toBed(coordinateBase0: Bool = true) {
-        if FileManager.default.fileExists(atPath: self.input.path)
-        {
-            BSLogger.debug("Found \(self.input.path)")
-        }
+    public func toBed(filename: String, coordinateBase0: Bool = true) {
         if !coordinateBase0 {
             base = 0
         }
+        let output: URL = URL(fileURLWithPath: filename)
+        if !FileManager.default.isWritableFile(atPath: output.deletingLastPathComponent().path) {
+            assertionFailure("Could not write to \(filename)")
+            exit(0)
+        }
+        
         if let s = StreamReader(url: self.input){
         BSLogger.debug("Read gtf")
         while let line = s.nextLine() {
@@ -36,7 +42,7 @@ public class GTF {
             }
         }
         // read()
-        write()
+        write(to: output)
     }
     private func _getAttribute(_ line: String) -> [String:String]{
         var dict = [String:String]()
@@ -91,11 +97,11 @@ public class GTF {
             .forEach { line in self._parse(String(line))}
     }
     // write file
-    public func write(){
+    public func write(to url: URL){
         BSLogger.debug("Write bed")
         do {
             let outline = self._outlines.joined(separator: "\n")
-            try outline.write(to: self.output, atomically: false, encoding: .utf8)
+            try outline.write(to: url, atomically: false, encoding: .utf8)
         } catch{}
     }
 }
