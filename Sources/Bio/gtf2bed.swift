@@ -17,41 +17,45 @@ public class GTF {
         self.output = URL(fileURLWithPath: bed)
         self._outlines = [String]()
     }
+    //deinit{} // no () here
     
     public func toBed() {
-        //var _outlines = [String]() // initialize empty
-        BSLogger.debug("Read gtf line by line")
-        if let file = File(self.input.path){
-            while let line = file.getLine() {
-                if line.starts(with: "#") {
-                    continue
-                }
-                let arr = line.split(separator: "\t")
-                if arr[2] == "gene" {
-                    let last = arr.last! // last element
-                    let attr = self.getAttribute(String(last))
-                    var outline:String = "\(attr["gene_id"]!)\t\(attr["gene_name"]!)\t\(arr[6])"
-                    var chrStart = Int(arr[3])!
-                    let chrEnd = Int(arr[4])!
-                    chrStart -= 1
-                    outline = "\(arr[0])\t\(chrStart)\t\(chrEnd)\t" + outline
-                    _outlines.append(outline)
-                    //print(outline)
-                  }
-          }
-        }
+//        if let file = File(self.input.path){
+//            while let line = file.getLine() {
+//                self._parse(line)
+//          }
+//        }
+        read()
         write()
     }
     
-    private func getAttribute(_ line: String) -> [String:String]{
-        var dict =  [String:String]()
+    private func _getAttribute(_ line: String) -> [String:String]{
+        var dict = [String:String]()
         let attr = line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).split(separator: ";")
+        //for (i,item) in attr.enumerate() {}
         for item in attr {
             let trimmed = item.trimmingCharacters(in: .whitespacesAndNewlines).split(separator:" ")
             dict.updateValue(String(trimmed[1]).replacingOccurrences(of: "\"", with: ""),
                              forKey: String(trimmed[0]))
         }
         return dict
+    }
+    private func _parse(_ line: String) {
+        if line.starts(with: "#") {
+            return
+        }
+        let arr = line.split(separator: "\t")
+        if arr[2] == "gene" {
+            let last = arr.last! // last element
+            let attr = self._getAttribute(String(last))
+            var outline:String = "\(attr["gene_id"]!)\t\(attr["gene_name"]!)\t\(arr[6])"
+            var chrStart = Int(arr[3])!
+            let chrEnd = Int(arr[4])!
+            chrStart -= 1
+            outline = "\(arr[0])\t\(chrStart)\t\(chrEnd)\t" + outline
+            _outlines.append(outline)
+            //print(outline)
+          }
     }
     /**
      * Converts tuples to dict
@@ -63,12 +67,12 @@ public class GTF {
     }
     // read whole file
     public func read() {
-        BSLogger.debug("Read gtf one time")
+        BSLogger.debug("Read gtf")
         try? String(contentsOf: self.input,
                     encoding: .utf8)
-            .split(separator: "\n")
-            .forEach { line in
-                self._outlines.append(String(line))}
+            .split(separator: "\n") // "\n"
+            .forEach { line in self._parse(String(line))}
+
     }
     // whole whole array
     public func write(){

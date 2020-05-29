@@ -4,6 +4,12 @@
 //
 //  Created by Zhuoqing Fang on 5/27/20.
 //
+#if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+    import Darwin
+#else
+    import Glibc
+#endif
+
 import Foundation
 import Logging
 
@@ -59,4 +65,14 @@ class File {
     }
     private var file: UnsafeMutablePointer<FILE>? = nil
 }
+
+//let str:String? = "Not Found"
+//let str2:String? = nil
+//if let s = str, s2 = str2 where s =="Not Found" {
+//    print(s, s2)
+//} else {
+//    print("failed")
+//}
+
+
 
