@@ -17,9 +17,10 @@ struct gtf2bed: ParsableCommand {
     public static let configuration = CommandConfiguration(abstract: "Convert GTF to BED format")
 
     // optional argument
+    // @Option(name: .shortAndLong, default: false, help: "Convert to 1-based coordinate")
     
-    //@Option(name: .shortAndLong, default: nil, help: "")
-    //private var week: Int?
+    @Flag(name: .shortAndLong, help: "Convert to 1-based coordinate")
+    private var base1: Bool
     @Flag(name: .long, help: "Show extra logging for debugging purposes")
     private var verbose: Bool
     
@@ -36,7 +37,8 @@ struct gtf2bed: ParsableCommand {
         }
         Bio.BSLogger.debug("Program start")
         let gtf_parser = GTF(from: gtf, to: bed)
-        gtf_parser.toBed()
+        let base0 = base1 ? false : true
+        gtf_parser.toBed(coordinateBase0: base0)
         Bio.BSLogger.debug("Program end")
     }
 }

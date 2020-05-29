@@ -48,7 +48,8 @@ try? String(contentsOf: fileURL,
     .split(separator: "\n") 
     .forEach { line in print(line)}
 ```
-**NOTE**: Since `String` reads the whole file once, instead of line by line, it took a long time to read large size files. Don't use it only if needed
+**NOTE**: Since `String` reads the whole file once, instead of line by line, it took a long time to read large size files. Reading file line by line is much more efficiently, but you have to write your own parser.
+
 ### 2. An experimental 2D Array with Numpy-like slicing
 `Array2D` is only for testing purpose. An example of swift code:
 ```swift
