@@ -11,10 +11,14 @@ final class BioSwiftTests: XCTestCase {
         var arr = Array2D<Int>(rows:10, columns:5, initialValue: 0 )
         arr[1,4] = 1
         arr[5,2] = 6
-        print("Print row 5:")
+        print("Print 1D array:")
         print(arr[5])
-        print(arr[[1,3],nil])
         print(arr[2,nil])
+        print(arr[nil, 1])
+        
+        print("Print 2D array")
+        print(arr[[1,3],nil])
+        print(arr[nil,[2,4]])
         print(arr[1..<6, 3..<5])
         XCTAssertEqual(arr[1,4], 1)
         XCTAssertEqual(arr[5,2], 6)

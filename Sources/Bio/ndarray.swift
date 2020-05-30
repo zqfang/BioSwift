@@ -217,3 +217,15 @@ extension Array2D {
         }
     }
 }
+
+// pretty printable 2D array
+extension Array2D: CustomStringConvertible {
+    public var description: String {
+        var str = Array<String>()
+        for r in 0 ..< rows {
+            str.append(" \(array[r]),")
+        }
+        let stro = str.joined(separator: "\n").dropLast().dropFirst()
+        return "[\(stro)]"
+    }
+}

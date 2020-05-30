@@ -4,14 +4,15 @@ A collection of toy `command-line` tools written in `Swift` for bioinformatic da
 Each tool is a subcommand of `biosw`. 
 
 ## Usage:
-Command line
+### Command line
 1. Convert GTF to BED format
 ```shell
 biosw gtf2bed gencode.gtf out.bed
 ```
 2. More will be added if worth to.
 
-Swift REPL
+### Swift REPL
+As a library 
 ```swift
 import Bio
 let testDataPath = "data"
@@ -57,25 +58,47 @@ try? String(contentsOf: fileURL,
 ```
 **NOTE**: Since `String` reads the whole file once, instead of line by line, it took a long time to read large size files. Reading file line by line is much more efficiently, but you have to write your own parser.
 
-### 2. An experimental 2D Array with Numpy-like slicing
+### 2. An experimental 2D Array with Numpy-like indexing and slicing
 `Array2D` is only for testing purpose. An example of swift code:
+
+init and assign values
 ```swift
 import Bio
 // init 2d array
 var arr = Array2D<Int>(rows:10, columns:5, initialValue: 0 )
+
+// init an Array2D by another Array2D instance
+let arr2 = Array2D<Int>(arr)
+
+// init a Array2D by generic 2d arry
+let arr3 = Array2D<Dobule>([[1.0,2,0],[3.0,4.0]])
+
 // assign value
 arr[1,4] = 1 
 arr[5,2] = 6
 
 print(arr[5]) // [0, 0, 6, 0, 0]
+```
 
-print(arr[[1,3],nil]) // [[0, 0, 0, 0, 1], [0, 0, 0, 0, 0]]
-print(arr[2,nil]) // [0, 0, 0, 0, 0]
-print(arr[1..<6, 3..<5]) // [[0, 1], [0, 0], [0, 0], [0, 0], [0, 0]]
+Numpy-like indexing and slicing
+```swift
+print(arr[[1,3],nil]) 
+/* 
+[[0, 0, 0, 0, 1], 
+ [0, 0, 0, 0, 0]]
+*/
 
+print(arr[2,nil]) 
+// [0, 0, 0, 0, 0]
 
-// init 2d array
-let arr2 = Array2D<Int>(arr)
+print(arr[1..<6, 3..<5]) 
+/* 
+[[0, 1], 
+ [0, 0], 
+ [0, 0], 
+ [0, 0], 
+ [0, 0]]
+*/
 ```
 
 
