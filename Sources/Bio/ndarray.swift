@@ -76,27 +76,27 @@ extension Array2D {
             }
         }
     }
-    public subscript(row: [Int], column: Int) -> [[T]]{
+    public subscript(row: [Int], column: Int) -> Array2D<T>{
         get {
             precondition(column >= 0 && column < columns, "Column index is out of range.")
             assert(row.min()! >= 0 && row.max()! < rows, "Row index out of range.")
             var arr = [[T]]()
             row.forEach{ rr in arr.append([array[rr][column]])}
             
-            return arr
+            return Array2D<T>(arr)
         }
         set (matrix) { // return [[T]], so matrix type is [[T]]
 
             precondition(column < columns && column >= 0, "Column \(column) Index is out of range.")
             assert(row.min()! >= 0 && row.max()! < rows, "Row index out of range.")
-             assert(matrix.count == row.count, "Element length not match")
-            for (r,v) in zip(row, matrix) {
-                array[r][column] = v[0]
+             assert(matrix.rows == row.count, "Element length not match")
+            for (r,v) in zip(row, matrix.array) {
+                array[r][column] = v[0] // v-> 2d array with one column
             }
         }
     }
     
-    public subscript(row: [Int]?, column: [Int]?) -> [[T]]{
+    public subscript(row: [Int]?, column: [Int]?) -> Array2D<T>{
         get {
             var arr = [[T]]()
             if let r = row, let c = column {
@@ -112,7 +112,7 @@ extension Array2D {
             } else {
                 if row == nil && column == nil
                 {
-                   return array
+                   return self
                 }
                 //var r0: Range<Int> = 0 ..< rows, c0: Range<Int> =  0 ..< columns
                 var r0: [Int], c0: [Int]
@@ -138,16 +138,16 @@ extension Array2D {
                     arr.insert(temp, at: i)
                 }
                 }
-             return arr
+             return Array2D<T>(arr)
         }
     set (matrix) {
         if let r = row, let c = column {
             assert(r.min()! >= 0 && r.max()! < rows, "Row Index out of range." )
             assert(c.min()! >= 0 && c.max()! < columns, "Column Index out of range.")
-            assert(matrix.count == r.count && matrix[0].count == c.count, "Index out of range")
+            assert(matrix.rows == r.count && matrix.columns == c.count, "Index out of range")
             for (i, r0) in r.enumerated() {
                 for (j, c0) in c.enumerated()  {
-                    array[r0][c0] = matrix[i][j]
+                    array[r0][c0] = matrix[i,j]
                 }
             }
         }else{
@@ -158,7 +158,7 @@ extension Array2D {
 }
 //fancy slicing
 extension Array2D {
-    public subscript(row: Range<Int>?, column: Int) -> [[T]]{
+    public subscript(row: Range<Int>?, column: Int) -> Array2D<T>{
         get {
             precondition(column >= 0 && column < columns, "Column index is out of range.")
             var arr = [[T]]()
@@ -169,7 +169,7 @@ extension Array2D {
                 let r0 = 0..<rows
                 r0.forEach{ rr in arr.append([array[rr][column]])}
             }
-            return arr
+            return Array2D<T>(arr)
             
         }
     }
@@ -184,7 +184,7 @@ extension Array2D {
             }
         }
     }
-    public subscript(row: Range<Int>?, column: Range<Int>?) -> [[T]]{
+    public subscript(row: Range<Int>?, column: Range<Int>?) -> Array2D{
         get {
             var arr = [[T]]()
             if let r = row, let c = column {
@@ -194,7 +194,7 @@ extension Array2D {
             } else {
                 if row == nil && column == nil
                 {
-                   return array
+                   return self
                 }
                 //var r0: Range<Int> = 0 ..< rows, c0: Range<Int> =  0 ..< columns
                 var r0: Range<Int>, c0: Range<Int>
@@ -213,7 +213,7 @@ extension Array2D {
                 }
                 r0.forEach{rr in arr.append(Array<T>(array[rr][c0]))}
             }
-             return arr
+             return Array2D<T>(arr)
         }
     }
 }

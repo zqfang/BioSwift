@@ -16,12 +16,6 @@ public class GTF {
     public init(_ gtf:String) {
         self.input = URL(fileURLWithPath: gtf)
         self._outlines = [String]()
-        if FileManager.default.isReadableFile(atPath: self.input.path)
-        {
-            BSLogger.debug("Found \(self.input.path)")
-        } else {
-            assertionFailure("File Not Found at \(self.input.path)")
-        }
     }
     //deinit{} // no () here
     

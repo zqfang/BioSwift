@@ -11,15 +11,6 @@ import Logging
 public var BSLogger = Logger(label: "BioSwift.main",
                               factory: StreamLogHandler.standardError)
 
-//let str:String? = "Not Found"
-//let str2:String? = nil
-//if let s = str, s2 = str2 where s =="Not Found" {
-//    print(s, s2)
-//} else {
-//    print("failed")
-//}
-//
-
 // Swifty FileReader, read file line by line
 class StreamReader {
     let encoding: String.Encoding
@@ -28,6 +19,8 @@ class StreamReader {
     var buffer: Data
     let delimPattern : Data
     var isAtEOF: Bool = false
+    let fileURL: URL
+    var fileOut: Array<String>?
     
     init?(url: URL, delimeter: String = "\n", encoding: String.Encoding = .utf8, chunkSize: Int = 4096)
     {
@@ -35,6 +28,7 @@ class StreamReader {
         self.fileHandle = fileHandle
         self.chunkSize = chunkSize
         self.encoding = encoding
+        self.fileURL = url
         buffer = Data(capacity: chunkSize)
         delimPattern = delimeter.data(using: .utf8)!
     }
@@ -67,5 +61,12 @@ class StreamReader {
                 buffer.append(tempData)
             }
         } while true
+    }
+    /**
+     * Read whole file one time.
+     * WARNING: This method is too slow when file size is large. Don't use
+     */
+    func read() -> String? {
+        return try? String(contentsOf: self.fileURL, encoding: self.encoding)
     }
 }
