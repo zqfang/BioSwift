@@ -7,9 +7,17 @@
 import Foundation
 import Logging
 
-// define a global logger
-public var BSLogger = Logger(label: "BioSwift.main",
-                              factory: StreamLogHandler.standardError)
+// define a singleton
+public class BSLogger {
+    public var logger: Logger?
+    public static let defaultLogger = BSLogger()
+    private init (){
+        if logger == nil {
+        logger = Logger(label: "BioSwift.main",
+                 factory: StreamLogHandler.standardError)
+        }
+    }
+}
 
 // Swifty FileReader, read file line by line
 class StreamReader {

@@ -17,6 +17,15 @@ public struct Array2D<T> {
     self.columns = columns
     self.rows = rows
     array = [[T]]()
+//    // much faster version
+//    let N = 300_000
+//    var buffer = [Int64](repeating: 0, count: N)
+    
+//    buffer.withUnsafeMutableBufferPointer { buffer in
+//        for i in 0 ..< N {
+//            buffer[i] = test
+//        }
+//    }
     for _ in 0..<rows {
         let arow = Array(repeating: initialValue, count: columns)
         array.append(arow)

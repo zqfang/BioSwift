@@ -30,16 +30,22 @@ struct gtf2bed: ParsableCommand {
     @Argument(help: "Output bed file")
     private var bed: String
     
+    
     func run() throws {
-        
+        let bl = BSLogger.defaultLogger
         if verbose {
-            Bio.BSLogger.logLevel = .debug
+            bl.logger?.logLevel = .debug
         }
-        Bio.BSLogger.debug("Program start")
+        bl.logger?.debug("Program start")
+        let start = CFAbsoluteTimeGetCurrent()
+        //let start = Date()
         let gtf_parser = GTF(gtf)
         let base0 = base1 ? false : true
         gtf_parser.toBed(filename: bed, coordinateBase0: base0)
-        Bio.BSLogger.debug("Program end")
+        let end = CFAbsoluteTimeGetCurrent()
+        let t:String = String(format:"%.3f", end - start)
+        // let time = Date().timeIntervalSince(start) * 1_000)) // ms
+        bl.logger?.debug("Program end. Time used: \(t) s")
     }
 }
 

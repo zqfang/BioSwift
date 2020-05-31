@@ -25,6 +25,9 @@ let package = Package(
         //.package(url: "https://github.com/saeta/Just", from: "0.7.3"),
         // Path
         //.package(url: "https://github.com/mxcl/Path.swift", from: "0.16.3"),
+        //.package(url: "https://github.com/KarthikRIyer/swiftplot.git", from: "2.0.0")),
+        //.package(url: "https://github.com/saeta/penguin", from:"0.0.0")) // DataFrame
+        //.package(url: "https://github.com/param087/swiftML", .exact("0.0.4") //SKlearn-like
         // logging
         
     ],
@@ -34,7 +37,7 @@ let package = Package(
         .target(
             name: "Bio",
             dependencies: ["Logging",
-                           /*"CSV","Just", "Path",*/
+                           /*"CSV","Just", "Path","SwiftPlot","AGGRenderer","swiftML"*/
                            /*.product(name: "Numerics", package: "swift-numerics"),*/]),
         .target(
             name: "Run",

@@ -11,7 +11,8 @@ import Foundation
 public class GTF {
     let input: URL
     var base: Int = 1
-    fileprivate var _outlines: Array<String>
+    let BLOG = BSLogger.defaultLogger
+    private var _outlines: Array<String>
     // gtf path and bed path
     public init(_ gtf:String) {
         self.input = URL(fileURLWithPath: gtf)
@@ -30,7 +31,7 @@ public class GTF {
         }
         
         if let s = StreamReader(url: self.input){
-        BSLogger.debug("Read gtf")
+            BLOG.logger?.debug("Read gtf")
         while let line = s.nextLine() {
                 self._parse(line)
             }
@@ -84,7 +85,7 @@ public class GTF {
      * WARNING: This method is too slow when file size is large. Don't use
      */
     public func read() {
-        BSLogger.debug("Read gtf")
+        BLOG.logger?.debug("Read gtf")
         try? String(contentsOf: self.input,
                     encoding: .utf8)
             .split(separator: "\n") // "\n"
@@ -92,7 +93,7 @@ public class GTF {
     }
     // write file
     public func write(to url: URL){
-        BSLogger.debug("Write bed")
+        BLOG.logger?.debug("Write bed")
         do {
             let outline = self._outlines.joined(separator: "\n")
             try outline.write(to: url, atomically: false, encoding: .utf8)
