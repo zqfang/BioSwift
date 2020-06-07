@@ -11,12 +11,13 @@ import Foundation
 public class GTF {
     let input: URL
     var base: Int = 1
-    let BLOG = BSLogger.defaultLogger
-    private var _outlines: Array<String>
+    let bl = BSLogger.defaultLogger
+    private var _outlines:  [String]
+    
     // gtf path and bed path
     public init(_ gtf:String) {
         self.input = URL(fileURLWithPath: gtf)
-        self._outlines = [String]()
+        
     }
     //deinit{} // no () here
     
@@ -31,12 +32,13 @@ public class GTF {
         }
         
         if let s = StreamReader(url: self.input){
-            BLOG.logger?.debug("Read gtf")
+            self._outlines = [String]()
+            bl.logger?.debug("Read gtf")
         while let line = s.nextLine() {
                 self._parse(line)
             }
         }
-        // read()
+        //read()
         write(to: output)
     }
     private func _getAttribute(_ line: String) -> [String:String]{
@@ -85,15 +87,20 @@ public class GTF {
      * WARNING: This method is too slow when file size is large. Don't use
      */
     public func read() {
-        BLOG.logger?.debug("Read gtf")
+        bl.logger?.debug("Read gtf")
         try? String(contentsOf: self.input,
                     encoding: .utf8)
             .split(separator: "\n") // "\n"
             .forEach { line in self._parse(String(line))}
+        
+//        var lines = try! String(contentsOfFile: self.input.path)
+//            .split{$0 == "\n"}
+//            .map(String.init).map(self._parse)
+//        self._outlines = lines
     }
     // write file
     public func write(to url: URL){
-        BLOG.logger?.debug("Write bed")
+        bl.logger?.debug("Write bed")
         do {
             let outline = self._outlines.joined(separator: "\n")
             try outline.write(to: url, atomically: false, encoding: .utf8)

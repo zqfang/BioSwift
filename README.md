@@ -48,13 +48,13 @@ and to your `application/library` target, add `Bio` to your dependencies, e.g. l
 
 
 ## Others
-### 1. FileIO system in Swift quit different from C/C++, Python et.al
+### 1. FileIO system in Swift quit different from C/C++ and Python et.al
 Swift is slow when reading large text files with the code like  
 ```swift
-try? String(contentsOf: fileURL,
-            encoding: .utf8)
-    .split(separator: "\n") 
-    .forEach { line in print(line)}
+let path = Bundle.main.path(forResource:"test", ofType: "txt")
+let lines = try? String(contentsOfFile: path!)
+                     .split{$0 == "\n"}
+                     .map(String.init)
 ```
 **NOTE**: Since `String` reads the whole file once, instead of line by line, it took a long time to read large size files. Reading file line by line is much more efficiently, but you have to write your own parser.
 
