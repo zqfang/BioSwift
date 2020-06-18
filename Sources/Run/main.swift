@@ -6,7 +6,7 @@ import Bio
 struct biosw: ParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A Collection of Swift Command-line Tool for Bioinformatics",
-        subcommands: [gtf2bed.self])
+        subcommands: [gtf2bed.self, hbcgm.self])
 
     init() {}
 }
@@ -48,6 +48,46 @@ struct gtf2bed: ParsableCommand {
         bl.logger?.debug("Program end. Time used: \(t) s")
     }
 }
+
+
+// subcommands
+struct hbcgm: ParsableCommand {
+
+    public static let configuration = CommandConfiguration(abstract: "Convert VCF to HBCGM (eblocks) input format")
+
+    // optional argument
+    @Option(name: .customLong("het"), default: 20, help: "Heterozygote threshold, default: 20")
+    private var het_thresh: Float
+    
+    @Option(name: .long, default: 50, help: "QUAL Field threshold , default: 50")
+    private var qual: Float
+    
+    @Flag(name: .shortAndLong, help: "Show extra logging for debugging purposes")
+    private var verbose: Bool
+    
+    // positional argument
+    @Argument(help: "Input vcf file")
+    private var vcf: String
+    @Argument(help: "Output compact file")
+    private var out: String
+    
+    func run() throws {
+        let bl = BSLogger.defaultLogger
+        if verbose {
+            bl.logger?.logLevel = .debug
+        }
+        bl.logger?.debug("Program start")
+        let start = CFAbsoluteTimeGetCurrent()
+        //let start = Date()
+        let vcf_parser = VCF(vcf)
+        vcf_parser.toNIEHS(filename: out, qual: qual, heterozyote_thresh: het_thresh)
+        let end = CFAbsoluteTimeGetCurrent()
+        let t:String = String(format:"%.3f", end - start)
+        // let time = Date().timeIntervalSince(start) * 1_000)) // ms
+        bl.logger?.debug("Program end. Time used: \(t) s")
+    }
+}
+
 
 // need to be set, then it works on command-line
 biosw.main()

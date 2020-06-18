@@ -9,7 +9,12 @@ Each tool is a subcommand of `biosw`.
 ```shell
 biosw gtf2bed gencode.gtf out.bed
 ```
-2. More will be added if worth to.
+2. Convert VCF to HBCGM (eblocks) format
+```shell
+biosw hbcgm snp.vcf out.txt
+```
+
+3. More will be added if worth to.
 
 ### Swift REPL
 As a library 

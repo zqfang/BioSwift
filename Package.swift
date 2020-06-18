@@ -16,7 +16,8 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         //.package(url: "https://github.com/mtynior/ColorizeSwift.git", from: "1.2.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.0.1"),
-        //.package(url: "https://github.com/apple/swift-numerics", from: "0.0.5"),
+        //.package(url: "https://github.com/apple/swift-numerics.git", branch: "master")
+        //.package(url: "https://github.com/danielgindi/Charts.git", branch: "master"),
         // logging
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
         // csv reader

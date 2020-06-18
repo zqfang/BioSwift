@@ -35,6 +35,14 @@ final class BioSwiftTests: XCTestCase {
         XCTAssertEqual(output.deletingLastPathComponent().path, testDataPath)
         
     }
+    
+    func testVCF() throws {
+        let testDataPath = PACKAGE_ROOT.path + "/data"
+        let vcf = VCF(testDataPath+"/test.chrX.vcf")
+        vcf.toNIEHS(filename: testDataPath+"/test.compact.txt")
+        XCTAssertTrue(vcf.outlines[0].starts(with: "C57BL/6J"))
+        
+    }
     func testBioSwift() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct

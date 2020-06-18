@@ -17,7 +17,7 @@ public class GTF {
     // gtf path and bed path
     public init(_ gtf:String) {
         self.input = URL(fileURLWithPath: gtf)
-        
+        self._outlines =   [String]()
     }
     //deinit{} // no () here
     
