@@ -38,9 +38,21 @@ final class BioSwiftTests: XCTestCase {
     
     func testVCF() throws {
         let testDataPath = PACKAGE_ROOT.path + "/data"
-        let vcf = VCF(testDataPath+"/test.chrX.vcf")
+        
+        var start = CFAbsoluteTimeGetCurrent()
+        let vcf = VCF2(testDataPath+"/test.chrX.vcf")
         vcf.toNIEHS(filename: testDataPath+"/test.compact.txt")
+        var end = CFAbsoluteTimeGetCurrent()
+        var t:String = String(format:"%.3f", end - start)
+        print("Time used : \(t)")
         XCTAssertTrue(vcf.outlines[0].starts(with: "C57BL/6J"))
+        
+        start = CFAbsoluteTimeGetCurrent()
+        let vcf2 = VCF2(testDataPath+"/test.chrX.vcf")
+        vcf2.read2write(filename: testDataPath+"/test.compact2.txt")
+        end = CFAbsoluteTimeGetCurrent()
+        t = String(format:"%.3f", end - start)
+        print("Time used : \(t)")
         
     }
     func testBioSwift() throws {
@@ -49,9 +61,9 @@ final class BioSwiftTests: XCTestCase {
         // results.
 
         // Some of the APIs that we use below are available in macOS 10.13 and above.
-        guard #available(macOS 10.13, *) else {
-            return
-        }
+//        guard #available(macOS 10.13, *) else {
+//            return
+//        }
         let aaa = FileManager.default.currentDirectoryPath // -> /private/tmp
         //let aaa = FileManager.default.homeDirectoryForCurrentUser
         print("FileManger default directory: ", aaa)

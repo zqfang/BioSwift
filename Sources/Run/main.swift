@@ -79,7 +79,7 @@ struct hbcgm: ParsableCommand {
         bl.logger?.debug("Program start")
         let start = CFAbsoluteTimeGetCurrent()
         //let start = Date()
-        let vcf_parser = VCF(vcf)
+        let vcf_parser = VCF2(vcf)
         vcf_parser.toNIEHS(filename: out, qual: qual, heterozyote_thresh: het_thresh)
         let end = CFAbsoluteTimeGetCurrent()
         let t:String = String(format:"%.3f", end - start)
