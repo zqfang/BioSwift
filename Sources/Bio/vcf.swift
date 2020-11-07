@@ -19,8 +19,10 @@ public struct Variant {
     public var FILTER: String
     public var INFO: [String: String?]
     public var FORMAT: [String:[String]]
-    
     private var _variant: String
+    public var description: String {
+        return _variant
+    }
     
     lazy var variantType: String? = { //snp/indel/sv
         if let val = INFO["SVTYPE"] {
@@ -98,21 +100,21 @@ public class VCF {
             }
         }
     }
-    private func write(toFile: String)
-    {
-        if !FileManager.default.isWritableFile(atPath: toFile)
-        {
-            assertionFailure("Could not write to \(toFile)")
-            exit(0)
-        }
-        let url = URL(fileURLWithPath: toFile)
-
-        var outtext = ""
-        outtext = rawHeader+outtext
-        try? outtext.write(to: url, atomically: false, encoding: .utf8)
-
-        
-    }
+//    private func write(toFile: String)
+//    {
+//        if !FileManager.default.isWritableFile(atPath: toFile)
+//        {
+//            assertionFailure("Could not write to \(toFile)")
+//            exit(0)
+//        }
+//        let url = URL(fileURLWithPath: toFile)
+//
+//        var outtext = ""
+//        outtext = rawHeader.append(outtext)
+//        try? outtext.write(to: url, atomically: false, encoding: .utf8)
+//
+//        
+//    }
     
 
 }

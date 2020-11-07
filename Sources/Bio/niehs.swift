@@ -13,14 +13,14 @@ public class NIEHS {
     public var strains: [String]
     public var qual: Float = 50
     public var heterozyote_thresh: Float = 20
-    private var outlines: [String]
+    private var outlines: String
     /**
      - Parameters:
        - vcf: input file path
      */
     public init(from vcf:String) {
         self.input = URL(fileURLWithPath: vcf)
-        self.outlines = [String]()
+        self.outlines = ""
         self.strains = [String]()
     }
     // MARK: parse vcf files
@@ -51,8 +51,8 @@ public class NIEHS {
     private func write(to url: URL){
         bl.logger?.debug("Write compact")
         do {
-            let outtext = self.outlines.joined(separator: "")
-            try outtext.write(to: url, atomically: false, encoding: .utf8)
+            //let outtext = self.outlines.joined(separator: "")
+            try self.outlines.write(to: url, atomically: false, encoding: .utf8)
         } catch{}
     }
     
@@ -75,9 +75,6 @@ extension NIEHS {
             self.outlines.append(st0)
             let st = line.components(separatedBy: "\t")
             strains = Array(st[9..<st.endIndex])
-//            for s in st[9..<st.endIndex] {
-//                strains.append(s)
-//            }
             return
         }
         let variant = Variant(line)
@@ -106,7 +103,7 @@ extension NIEHS {
         let pos = variant.POS
         let alts = variant.ALT.components(separatedBy: ",")
         var hasAlt = Array(repeating: 0, count: alts.count)
-        var alleles = Array(repeating: "NN", count: strains.count)
+        var alleles = Array(repeating: "?", count: strains.count)
         
         for (s, _) in strains.enumerated() {
             //let strainFormats = newline[9+s].components(separatedBy: ":")
@@ -155,10 +152,10 @@ extension NIEHS {
             
             if minScore >= self.heterozyote_thresh {
                 if GTs[0] > 0 {
-                    alleles[s] = "\(alts[GTs[0] - 1])\(alts[GTs[0] - 1])"
+                    alleles[s] = alts[GTs[0] - 1]
                     hasAlt[GTs[0] - 1] = 1
                 } else {
-                    alleles[s] = "\(variant.REF)\(variant.REF)"
+                    alleles[s] = variant.REF
                 }
             } //else {alleles[s] = "NN"}
             
@@ -169,16 +166,7 @@ extension NIEHS {
         if (numGoodAlt == 1) {
             //let theGoodAlt = hasAlt.firstIndex(of: 1)
             //var alt = alts[theGoodAlt]
-            var alleles_pattern = String(variant.REF)
-            for s in alleles {
-                if s.first == "N" {
-                    alleles_pattern.append("?")
-                } else {
-                    alleles_pattern.append(s.first!)
-                }
-            }
-            
-            //let alleles_compact = alleles_pattern.joined(separator: "")
+            let alleles_pattern = String(variant.REF) + alleles.joined(separator: "")
             var out = "SNP_\(chrom)_\(pos)"
             out = out + "\t\(chrom)\t\(pos)\t\(alleles_pattern)\n"
             self.outlines.append(out)

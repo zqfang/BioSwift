@@ -3,6 +3,9 @@
 A collection of toy `command-line` tools written in `Swift` for bioinformatic data wrangling.    
 Each tool is a subcommand of `biosw`. 
 
+Warning:  Why string parsing in  Swift is so slow ? 
+
+
 ## Usage:
 ### Command line
 1. Convert GTF to BED format
