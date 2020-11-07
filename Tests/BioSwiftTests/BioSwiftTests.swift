@@ -35,8 +35,21 @@ final class BioSwiftTests: XCTestCase {
         XCTAssertEqual(output.deletingLastPathComponent().path, testDataPath)
         
     }
+    func testVCF() throws{
+        let testDataPath = PACKAGE_ROOT.path + "/data"
+        
+        let start = CFAbsoluteTimeGetCurrent()
+        let vcf = VCF(filename: testDataPath+"/test.chrX.vcf")
+        let x = vcf.variants.filter{record in return record.QUAL > "50"}
+        
+        
+        let end = CFAbsoluteTimeGetCurrent()
+        
+        print("total time: \(end - start)")
+
+    }
     
-    func testVCF() throws {
+    func testVCF2() throws {
         let testDataPath = PACKAGE_ROOT.path + "/data"
         
         var start = CFAbsoluteTimeGetCurrent()
@@ -45,15 +58,8 @@ final class BioSwiftTests: XCTestCase {
         var end = CFAbsoluteTimeGetCurrent()
         var t:String = String(format:"%.3f", end - start)
         print("Time used : \(t)")
-        XCTAssertTrue(vcf.outlines[0].starts(with: "C57BL/6J"))
-        
-        start = CFAbsoluteTimeGetCurrent()
-        let vcf2 = VCF2(testDataPath+"/test.chrX.vcf")
-        vcf2.read2write(filename: testDataPath+"/test.compact2.txt")
-        end = CFAbsoluteTimeGetCurrent()
-        t = String(format:"%.3f", end - start)
-        print("Time used : \(t)")
-        
+        //XCTAssertTrue(vcf.outlines[0].starts(with: "C57BL/6J"))
+            
     }
     func testBioSwift() throws {
         // This is an example of a functional test case.

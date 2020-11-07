@@ -32,6 +32,7 @@ struct GTFRecord {
         FRAME = String(arr[7])
         ATTR = [String:String]()
         _getAttribute(String(arr.last!))
+        
     }
     //deinit{} // no () here
     private mutating func _getAttribute(_ line: String) {
@@ -39,8 +40,9 @@ struct GTFRecord {
         let temp = line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).split(separator: ";")
         //for (i,item) in attr.enumerate() {}
         for item in temp {
-            let trimmed = item.trimmingCharacters(in: .whitespacesAndNewlines).split(separator:" ")
+            let trimmed = item.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ")
             ATTR.updateValue(String(trimmed[1]).replacingOccurrences(of: "\"", with: ""),
+                             
                              forKey: String(trimmed[0]))
         }
     }
@@ -109,7 +111,3 @@ public class GTF {
 //        self._outlines = lines
 
 }
-
-    
-    
-

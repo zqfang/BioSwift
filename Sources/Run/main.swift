@@ -6,7 +6,7 @@ import Bio
 struct biosw: ParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "A Collection of Swift Command-line Tool for Bioinformatics",
-        subcommands: [gtf2bed.self, hbcgm.self])
+        subcommands: [gtf2bed.self, vcf2niehs.self])
 
     init() {}
 }
@@ -51,9 +51,9 @@ struct gtf2bed: ParsableCommand {
 
 
 // subcommands
-struct hbcgm: ParsableCommand {
+struct vcf2niehs: ParsableCommand {
 
-    public static let configuration = CommandConfiguration(abstract: "Convert VCF to HBCGM (eblocks) input format")
+    public static let configuration = CommandConfiguration(abstract: "Convert VCF to NIEHS compact format")
 
     // optional argument
     @Option(name: .customLong("het"), default: 20, help: "Heterozygote threshold, default: 20")
@@ -79,7 +79,7 @@ struct hbcgm: ParsableCommand {
         bl.logger?.debug("Program start")
         let start = CFAbsoluteTimeGetCurrent()
         //let start = Date()
-        let vcf_parser = VCF2(vcf)
+        let vcf_parser = NIEHS(from: vcf)
         vcf_parser.toNIEHS(filename: out, qual: qual, heterozyote_thresh: het_thresh)
         let end = CFAbsoluteTimeGetCurrent()
         let t:String = String(format:"%.3f", end - start)

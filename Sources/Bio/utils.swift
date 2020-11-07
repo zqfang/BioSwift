@@ -19,6 +19,17 @@ public class BSLogger {
     }
 }
 
+/// MARK: transpose a  2d array. same as python's list(zip(*arr))
+extension Collection where Self.Iterator.Element: RandomAccessCollection {
+    // PRECONDITION: `self` must be rectangular, i.e. every row has equal size.
+    func transposed() -> [[Self.Iterator.Element.Iterator.Element]] {
+        guard let firstRow = self.first else { return [] }
+        return firstRow.indices.map { index in
+            self.map{ $0[index] }
+        }
+    }
+}
+
 // Swifty FileReader, read file line by line
 class StreamReader {
     let encoding: String.Encoding
@@ -136,50 +147,44 @@ extension LineReader: Sequence {
 /**
  If you need to read a very large file you’ll want to stream it so you’re not loading the entire thing into memory at once.
  */
-
-class StreamingFileReader {
-    var fileHandle: FileHandle?
-    var buffer: Data
-    let bufferSize: Int = 1024
-    
-    // Using new line as the delimiter
-    let delimiter = "\n".data(using: .utf8)!
-    
-    init(path: String) {
-        fileHandle = FileHandle(forReadingAtPath: path)
-        buffer = Data(capacity: bufferSize)
-    }
-    
-    func nextLine() -> String? {
-        var rangeOfDelimiter = buffer.range(of: delimiter)
-        
-        while rangeOfDelimiter == nil {
-            guard let chunk = fileHandle?.readData(ofLength: bufferSize) else { return nil }
-            
-            if chunk.count == 0 {
-                if buffer.count > 0 {
-                    defer { buffer.count = 0 }
-                    
-                    return String(data: buffer, encoding: .utf8)
-                }
-                
-                return nil
-            } else {
-                buffer.append(chunk)
-                rangeOfDelimiter = buffer.range(of: delimiter)
-            }
-        }
-        
-        let rangeOfLine = 0 ..< rangeOfDelimiter!.upperBound
-        let line = String(data: buffer.subdata(in: rangeOfLine), encoding: .utf8)
-        
-        buffer.removeSubrange(rangeOfLine)
-        
-        return line?.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}
-
-//let fileReader = StreamingFileReader(path: logFile)
-//while let line = fileReader.readLine() {
-//    // Do something with the line
+//class FileReader {
+//
+//    // MARK: - Private Members
+//
+//    private let file: URL
+//    private let delimiter: Data
+//    private let chunkSize: Int
+//    private let encoding: String.Encoding
+//    private let fileHandle: FileHandle
+//    private var buffer: Data
+//
+//    // MARK: - Initializers
+//
+//    init(file: URL,
+//         delimiter: String = "\n",
+//         encoding: String.Encoding = .utf8,
+//         chunkSize: Int = 4_096) throws {
+//        self.file = file
+//        self.delimiter = delimiter.data(using: .utf8)!
+//        self.encoding  = encoding
+//        self.chunkSize = chunkSize
+//        self.buffer = Data()
+//        self.fileHandle = try FileHandle(forReadingFrom: file)
+//    }
+//    func readLine() -> String? {
+//        var nextLine: Data? = nil
+//        var eof: Bool = false
+//        while eof == false && nextLine == nil {
+//            if let range = buffer.range(of: delimiter, options: []) {
+//                nextLine = buffer.prefix(upTo: range.lowerBound)
+//                buffer = buffer.suffix(from: range.upperBound)
+//            } else {
+//                let newData = fileHandle.readData(ofLength: chunkSize)
+//                eof = newData.count == 0
+//                buffer += newData
+//            }
+//        }
+//        return nextLine.flatMap { String(data: $0, encoding: .utf8) }
+//    }
 //}
+//
