@@ -62,7 +62,7 @@ public class GTF {
         base = 1
         
         if let s = StreamReader(url: self.input){
-            bl.logger?.debug("Read gtf")
+            bl.logger?.debug("Parse gtf")
             while let line = s.nextLine() {
                 if line.starts(with: "#") {
                     continue
@@ -86,12 +86,11 @@ public class GTF {
         // write
         bl.logger?.debug("Write bed")
         let records = self._records.filter {record in return record.FEATURE == "gene" }
-        var outlines = [String]()
+        var outlines = ""
         for rec in records {
-            outlines.append("\(rec.CHROM)\t\(rec.START - base)\t\(rec.END)\t\(rec.ATTR["gene_name"] ?? "-")\t\(rec.SCORE)\t\(rec.STRAND)")
+            outlines.append("\(rec.CHROM)\t\(rec.START - base)\t\(rec.END)\t\(rec.ATTR["gene_name"] ?? "-")\t\(rec.SCORE)\t\(rec.STRAND)\n")
         }
-
-        try! outlines.joined(separator: "\n").write(to: output, atomically: false, encoding: .utf8)
+        try? outlines.write(to: output, atomically: false, encoding: .utf8)
         
     }
     /**
