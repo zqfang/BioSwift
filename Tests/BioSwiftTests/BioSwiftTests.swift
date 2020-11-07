@@ -53,7 +53,7 @@ final class BioSwiftTests: XCTestCase {
         let testDataPath = PACKAGE_ROOT.path + "/data"
         
         var start = CFAbsoluteTimeGetCurrent()
-        let vcf = VCF2(testDataPath+"/test.chrX.vcf")
+        let vcf = NIEHS(from: testDataPath+"/test.chrX.vcf")
         vcf.toNIEHS(filename: testDataPath+"/test.compact.txt")
         var end = CFAbsoluteTimeGetCurrent()
         var t:String = String(format:"%.3f", end - start)

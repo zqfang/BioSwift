@@ -14,7 +14,6 @@ public class NIEHS {
     public var qual: Float = 50
     public var heterozyote_thresh: Float = 20
     private var outlines: [String]
-    public var variants: [Variant]
     /**
      - Parameters:
        - vcf: input file path
@@ -23,7 +22,6 @@ public class NIEHS {
         self.input = URL(fileURLWithPath: vcf)
         self.outlines = [String]()
         self.strains = [String]()
-        self.variants = [Variant]()
     }
     // MARK: parse vcf files
     //func _parse(line: String);
@@ -42,7 +40,7 @@ public class NIEHS {
         bl.logger?.debug("Only keep SNPs with QUAL > \(qual) and Heterozyote_threshhold: \(heterozyote_thresh)")
         if let s = StreamReader(url: self.input){
         //let s = StreamingFileReader(path: self.input.path)
-            bl.logger?.debug("Read VCF")
+            bl.logger?.debug("Parse VCF")
             while var line0 = s.nextLine() {
                 self._parse(line: &line0)
             }
@@ -50,7 +48,7 @@ public class NIEHS {
         write(to: output)
     }
     
-    public func write(to url: URL){
+    private func write(to url: URL){
         bl.logger?.debug("Write compact")
         do {
             let outtext = self.outlines.joined(separator: "")

@@ -9,7 +9,7 @@ import Foundation
 
 
 /// represent each record
-public class Variant {
+public struct Variant {
     public var CHROM: String
     public var POS: String
     public var ID: String
