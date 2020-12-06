@@ -1,9 +1,20 @@
 # Swift-Bio
+
+The feature of Swift I like:
+-  First-class `Differentiable` programming: [What's this?](https://github.com/apple/swift/blob/main/docs/DifferentiableProgramming.md)
+- `Protocol-orientied` programming:
+   - a new and modern programming paradigm 
+- `Extension`: 
+  - Standard library could be extented. No need to write a wrapper class
+
+But something that I don't like:
+- The performance is really poor when parsing large text files.
+- Lack of `Numpy`-liked library yet
+- No Biocommunity yet 
+
 ## Introduction
 A collection of toy `command-line` tools written in `Swift` for bioinformatic data wrangling.    
 Each tool is a subcommand of `biosw`. 
-
-Warning:  Why string parsing in  Swift is so slow ? 
 
 
 ## Usage:
@@ -56,7 +67,13 @@ and to your `application/library` target, add `Bio` to your dependencies, e.g. l
 
 
 ## Others
-### 1. FileIO system in Swift quit different from C/C++ and Python et.al
+### 1. Strings and  Grapheme Clusters?   
+- Swift’s String and Character types are fully Unicode-compliant, see [docs](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID293)
+- What `Substring` is:
+- startIndex: string slicing ...
+-  Why `String` parsing in  Swift is so slow ?
+
+### 2. FileIO system in Swift quit different from C/C++ and Python et.al
 Swift is slow when reading large text files with the code like  
 ```swift
 let path = Bundle.main.path(forResource:"test", ofType: "txt")
@@ -66,8 +83,10 @@ let lines = try? String(contentsOfFile: path!)
 ```
 **NOTE**: Since `String` reads the whole file once, instead of line by line, it took a long time to read large size files. Reading file line by line is much more efficiently, but you have to write your own parser.
 
-### 2. An experimental 2D Array with Numpy-like indexing and slicing
-`Array2D` is only for testing purpose. An example of swift code:
+### 3. An experimental 2D Array with Numpy-like indexing and slicing
+`Array2D` is only for testing purpose. Now, we could use `SIMD` as backend.
+
+An example of swift code:
 
 init and assign values
 ```swift

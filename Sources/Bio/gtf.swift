@@ -37,7 +37,7 @@ struct GTFRecord {
     //deinit{} // no () here
     private mutating func _getAttribute(_ line: String) {
                 
-        let temp = line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).split(separator: ";")
+        let temp = line.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).components(separatedBy: ";")
         //for (i,item) in attr.enumerate() {}
         for item in temp {
             let trimmed = item.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ")

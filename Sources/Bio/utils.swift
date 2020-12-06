@@ -6,6 +6,9 @@
 //
 import Foundation
 import Logging
+import Darwin
+
+
 
 // define a singleton
 public class BSLogger {

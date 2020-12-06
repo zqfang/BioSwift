@@ -83,6 +83,7 @@ extension NIEHS {
         //assert(newline.count >= 9, "Eorr! check VCF input format")
         
         // skip indels
+        /// FIXME: dict has key ?
         if variant.REF.count > 1 || variant.INFO["INDEL"] == nil {
             return
         }
